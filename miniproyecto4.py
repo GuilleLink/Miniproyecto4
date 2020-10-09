@@ -25,7 +25,7 @@ def printBoard(board):
     print('   ' + str(board.item(0)) + '  ' + str(board.item(1)) + '  ' + str(board.item(2)) + '  ' + str(board.item(3)) + '  ' + str(board.item(4)))
     print(str(board.item((0,5))) + '                 ' + str(board.item((1,5))))
     print('   ' + str(board.item((1,0))) + '  ' + str(board.item((1,1))) + '  ' + str(board.item((1,2))) + '  ' + str(board.item((1,3))) + '  ' + str(board.item((1,4))))
-
+    print('    1  2  3  4  5  ')
 
 
 
@@ -40,9 +40,11 @@ while cont:
 
     elif(opt=='2'):
         it = 500
+        printBoard(startBoard)
 
     elif(opt=='3'):
         it = 10000
+        printBoard(startBoard)
 
     elif(opt=='4'):
         print('Gracias por jugar!')
