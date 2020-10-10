@@ -27,24 +27,37 @@ def printBoard(board):
     print('   1  2  3  4  5  \n')
 
 
-def doMove(move, board):
+def doMove(move, board, currentTurn):
     newBoard = board
     print('\nTokkens in space ' +str(move+1) + ' are: ' + str(board.item((1,move))))
-    moves =  board.item((1,move))
-    board.itemset((1,move), 0)
-    turn = 1
-    nextTurn = False
-    for movement in range(1, moves+1):
-        if(movement + move > 5):
-            if (turn == 0):
-                turn = 1
-            else:
-                turn = 0
-            
-        board.itemset((turn,((move+movement) % 6)), board.item((turn, ((move+movement) % 6))) + 1)
-    
-    if(move+movement==5):
+    if currentTurn:
+        nextTurn = False
+        turn = 1
+
+    if not currentTurn:
         nextTurn = True
+        turn = 0
+
+    moves =  board.item((turn,move))
+    board.itemset((turn,move), 0)
+    
+
+    for movement in range(1, moves+1):
+        if((movement + move) % 6 == 5):
+            board.itemset((turn, 5) , board.item((turn, 5))+1)
+            if (turn == 1):
+                turn = 0
+            else:
+                turn = 1
+
+        else:
+            board.itemset((turn,((move+movement) % 6)), board.item((turn, ((move+movement) % 6))) + 1)
+    
+    if(move+moves==5 and currentTurn):
+        nextTurn = True
+
+    elif(move+moves==5 and not currentTurn):
+        nextTurn = False
 
     return newBoard, nextTurn
 
@@ -124,10 +137,22 @@ while cont:
         actualboard = startBoard
         while play:
             while nextTurn:
+                print('*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-5)')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
-                    actualboard, nextTurn = doMove(int(move)-1, actualboard)   
+                    actualboard, nextTurn = doMove(int(move)-1, actualboard, nextTurn)   
                     printBoard(actualboard)
+                else:
+                    print('NO ES UN TIRO VALIDO')
+
+            while not nextTurn:
+                print('*********COMPUTER TURN*********')
+                move = input('PC MOVES')
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                    actualboard, nextTurn = doMove(int(move)-1, actualboard, nextTurn)   
+                    printBoard(actualboard)
+                else:
+                    print('NO ES UN TIRO VALIDO')
 
     elif(opt=='2'):
         it = 500
