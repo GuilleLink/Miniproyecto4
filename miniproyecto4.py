@@ -91,6 +91,12 @@ def calcular_movimiento(variables):
 
     return random.choice(max_keys)
 
+def checkPossibleMoves(turn, board):
+    if (sum(board.A[turn]) == 0):
+        return False
+    else:
+        return True
+
 def start_simulation(iteraciones, board):
     variables = {
         0: {
@@ -158,8 +164,11 @@ while cont:
                 print('*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-5): ')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
-                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
-                    printBoard(actualboard)
+                    if(actualboard.item((1, int(move)-1)) != 0):
+                        actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
+                        printBoard(actualboard)
+                    else:
+                        print('NO PUEDE SELECCIONAR CASILLAS CON 0')
                 else:
                     print('NO ES UN TIRO VALIDO')
 
@@ -192,8 +201,11 @@ while cont:
                 print('*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-5): ')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
-                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
-                    printBoard(actualboard)
+                    if(actualboard.item((1, int(move)-1)) != 0):
+                        actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
+                        printBoard(actualboard)
+                    else:
+                        print('NO PUEDE SELECCIONAR CASILLAS CON 0')
                 else:
                     print('NO ES UN TIRO VALIDO')
 
@@ -225,8 +237,11 @@ while cont:
                 print('*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-5): ')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
-                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
-                    printBoard(actualboard)
+                    if(actualboard.item((1, int(move)-1)) != 0):
+                        actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
+                        printBoard(actualboard)
+                    else:
+                        print('NO PUEDE SELECCIONAR CASILLAS CON 0')
                 else:
                     print('NO ES UN TIRO VALIDO')
 
