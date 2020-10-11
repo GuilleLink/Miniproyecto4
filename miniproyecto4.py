@@ -28,8 +28,9 @@ def printBoard(board):
 
 
 def doMove(move, board, currentTurn):
-    newBoard = board
-    print('\nTokkens in space ' +str(move+1) + ' are: ' + str(board.item((1,move))))
+    move = int(move)
+    newBoard = np.copy(board)
+    # print('\nTokkens in space ' +str(move+1) + ' are: ' + str(newBoard.item((1,move))))
     if currentTurn:
         nextTurn = False
         turn = 1
@@ -38,20 +39,19 @@ def doMove(move, board, currentTurn):
         nextTurn = True
         turn = 0
 
-    moves =  board.item((turn,move))
-    board.itemset((turn,move), 0)
+    moves =  newBoard.item((turn,move))
+    newBoard.itemset((turn,move), 0)
     
-
     for movement in range(1, moves+1):
         if((movement + move) % 6 == 5):
-            board.itemset((turn, 5) , board.item((turn, 5))+1)
+            newBoard.itemset((turn, 5) , newBoard.item((turn, 5))+1)
             if (turn == 1):
                 turn = 0
             else:
                 turn = 1
 
         else:
-            board.itemset((turn,((move+movement) % 6)), board.item((turn, ((move+movement) % 6))) + 1)
+            newBoard.itemset((turn,((move+movement) % 6)), newBoard.item((turn, ((move+movement) % 6))) + 1)
     
     if(move+moves==5 and currentTurn):
         nextTurn = True
@@ -59,10 +59,21 @@ def doMove(move, board, currentTurn):
     elif(move+moves==5 and not currentTurn):
         nextTurn = False
 
-    return newBoard, nextTurn
+    return newBoard, nextTurn, checkEnd(newBoard), WhoWin(newBoard)
 
-def do_move(board, pos, jugador):
-    return board, random.randint(0, 1), random.randint(0, 1)
+def checkEnd(board):
+    if board.item((0, 5)) + board.item((1, 5)) == 40:
+        return True
+    else:
+        return False
+
+def WhoWin(board):
+    if board.item((0, 5)) > board.item((1, 5)):
+        return 0
+    elif board.item((0, 5)) < board.item((1, 5)):
+        return 1
+    else:
+        return -1
 
 def calcular_movimiento(variables):
     calculos = {}
@@ -80,9 +91,11 @@ def calcular_movimiento(variables):
     return random.choice(max_keys)
 
 def start_simulation(iteraciones, board):
-    board_temp = np.copy(board)
-
     variables = {
+        0: {
+            'exitos': 0,
+            'elegidos': 0
+        },
         1: {
             'exitos': 0,
             'elegidos': 0
@@ -98,30 +111,26 @@ def start_simulation(iteraciones, board):
         4: {
             'exitos': 0,
             'elegidos': 0
-        },
-        5: {
-            'exitos': 0,
-            'elegidos': 0
         }
     }
 
     for i in range(iteraciones):
-        eleccion_inicial = random.randint(1, 5)
+        board_temp = np.copy(board)
+        turno = False
+        eleccion_inicial = random.randint(0, 4)
         
         variables[eleccion_inicial]['elegidos'] += 1
-        turno = 0
-        board_temp, end, win = do_move(board_temp, eleccion_inicial, turno)
+        board_temp, turno, end, win = doMove(eleccion_inicial, board_temp, turno)
 
         while not end:
-            turno = (turno + 1) % 2
-            eleccion = random.randint(1, 5)
+            eleccion = random.randint(0, 4)
 
-            board_temp, end, win = do_move(board_temp, eleccion, turno)
+            board_temp, turno, end, win = doMove(eleccion, board_temp, turno)
 
-        if win:
+        if win == 0:
             variables[eleccion_inicial]['exitos'] += 1
 
-    return calcular_movimiento(variables)        
+    return calcular_movimiento(variables)
 
 
 while cont:
@@ -132,37 +141,102 @@ while cont:
     if(opt=='1'):
         nextTurn = True
         it = 0
-        play = True
+        play = False
         printBoard(startBoard)
         actualboard = startBoard
-        while play:
+        while not play:
             while nextTurn:
                 print('*********HUMAN TURN*********')
-                move = input('Ingrese su movimiento (1-5)')
+                move = input('Ingrese su movimiento (1-5): ')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
-                    actualboard, nextTurn = doMove(int(move)-1, actualboard, nextTurn)   
+                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
                     printBoard(actualboard)
                 else:
                     print('NO ES UN TIRO VALIDO')
 
             while not nextTurn:
                 print('*********COMPUTER TURN*********')
-                move = input('PC MOVES')
+                move = start_simulation(it, actualboard) + 1
+                move = str(move)
+                print('Movimiento de PC:', move)
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
-                    actualboard, nextTurn = doMove(int(move)-1, actualboard, nextTurn)   
+                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)
+                    printBoard(actualboard)
+                else:
+                    print('NO ES UN TIRO VALIDO')
+        if winner == 1:
+            print('GANASTEEE :)')
+        elif winner == 0:
+            print('PERDISTE :(')
+        else:
+            print('EMPATARON :o')
+
+
+    elif(opt=='2'):
+        nextTurn = True
+        it = 500
+        play = False
+        printBoard(startBoard)
+        actualboard = startBoard
+        while not play:
+            while nextTurn:
+                print('*********HUMAN TURN*********')
+                move = input('Ingrese su movimiento (1-5): ')
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
                     printBoard(actualboard)
                 else:
                     print('NO ES UN TIRO VALIDO')
 
-    elif(opt=='2'):
-        it = 500
-        printBoard(startBoard)
-        move = start_simulation(it, startBoard)
+            while not nextTurn:
+                print('*********COMPUTER TURN*********')
+                move = start_simulation(it, actualboard) + 1
+                move = str(move)
+                print('Movimiento de PC:', move)
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)
+                    printBoard(actualboard)
+                else:
+                    print('NO ES UN TIRO VALIDO')
+        if winner == 1:
+            print('GANASTEEE :)')
+        elif winner == 0:
+            print('PERDISTE :(')
+        else:
+            print('EMPATARON :o')
 
     elif(opt=='3'):
+        nextTurn = True
         it = 10000
+        play = False
         printBoard(startBoard)
-        move = start_simulation(it, startBoard)
+        actualboard = startBoard
+        while not play:
+            while nextTurn:
+                print('*********HUMAN TURN*********')
+                move = input('Ingrese su movimiento (1-5): ')
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
+                    printBoard(actualboard)
+                else:
+                    print('NO ES UN TIRO VALIDO')
+
+            while not nextTurn:
+                print('*********COMPUTER TURN*********')
+                move = start_simulation(it, actualboard) + 1
+                move = str(move)
+                print('Movimiento de PC:', move)
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                    actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)
+                    printBoard(actualboard)
+                else:
+                    print('NO ES UN TIRO VALIDO')
+        if winner == 1:
+            print('GANASTEEE :)')
+        elif winner == 0:
+            print('PERDISTE :(')
+        else:
+            print('EMPATARON :o')
 
     elif(opt=='4'):
         print('Gracias por jugar!')
