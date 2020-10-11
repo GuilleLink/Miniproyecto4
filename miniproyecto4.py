@@ -92,7 +92,7 @@ def calcular_movimiento(variables):
     return random.choice(max_keys)
 
 def checkPossibleMoves(turn, board):
-    if (sum(board.A[turn]) == 0):
+    if (sum(board.A[turn]) - (board.item((turn, 5))) == 0):
         return False
     else:
         return True
