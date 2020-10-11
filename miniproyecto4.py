@@ -92,7 +92,7 @@ def calcular_movimiento(variables):
     return random.choice(max_keys)
 
 def checkPossibleMoves(turn, board):
-    if (sum(board.A[turn]) - (board.item((turn, 5))) == 0):
+    if (sum(board[turn]) - (board.item((turn, 5))) == 0):
         return False
     else:
         return True
@@ -126,19 +126,27 @@ def start_simulation(iteraciones, board):
         turno = False
         correct = False
 
-        while not correct:
+        if checkPossibleMoves(0, board_temp):
+            while not correct:
+                eleccion_inicial = random.randint(0, 4)
+                if board_temp.item((0, eleccion_inicial)) != 0:
+                    correct = True
+        else:
             eleccion_inicial = random.randint(0, 4)
-            if board_temp.item((0, eleccion_inicial)) != 0:
-                correct = True
         
         variables[eleccion_inicial]['elegidos'] += 1
         board_temp, turno, end, win = doMove(eleccion_inicial, board_temp, turno)
 
         while not end:
             correct = False
-            eleccion = random.randint(0, 4)
-            if board_temp.item((0, eleccion)) != 0:
-                correct = True
+
+            if checkPossibleMoves(0, board_temp):
+                while not correct:
+                    eleccion = random.randint(0, 4)
+                    if board_temp.item((0, eleccion)) != 0:
+                        correct = True
+            else:
+                eleccion = random.randint(0, 4)
 
             board_temp, turno, end, win = doMove(eleccion, board_temp, turno)
 
