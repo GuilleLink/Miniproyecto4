@@ -79,9 +79,10 @@ def calcular_movimiento(variables):
     calculos = {}
 
     for casilla, datos in variables.items():
-        if datos['exitos'] != 0:
-            calculos[casilla] = datos['elegidos'] / datos['exitos']
+        if datos['elegidos'] != 0:
+            calculos[casilla] = datos['exitos'] / datos['elegidos']
 
+    print(calculos)
     if len(calculos.values()) == 0:
         return random.choice(list(variables.keys()))
 
@@ -117,13 +118,21 @@ def start_simulation(iteraciones, board):
     for i in range(iteraciones):
         board_temp = np.copy(board)
         turno = False
-        eleccion_inicial = random.randint(0, 4)
+        correct = False
+
+        while not correct:
+            eleccion_inicial = random.randint(0, 4)
+            if board_temp.item((0, eleccion_inicial)) != 0:
+                correct = True
         
         variables[eleccion_inicial]['elegidos'] += 1
         board_temp, turno, end, win = doMove(eleccion_inicial, board_temp, turno)
 
         while not end:
+            correct = False
             eleccion = random.randint(0, 4)
+            if board_temp.item((0, eleccion)) != 0:
+                correct = True
 
             board_temp, turno, end, win = doMove(eleccion, board_temp, turno)
 
