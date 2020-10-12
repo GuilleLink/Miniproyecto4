@@ -169,7 +169,7 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
-                if not play:
+                if play:
                     break
 
                 if (checkPossibleMoves(1, actualboard) == False):
@@ -188,7 +188,7 @@ while cont:
                     print('NO ES UN TIRO VALIDO')
 
             while not nextTurn:
-                if not play:
+                if play:
                     break
 
                 print('*********COMPUTER TURN*********')
@@ -217,7 +217,7 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
-                if not play:
+                if play:
                     break
 
                 if (checkPossibleMoves(1, actualboard) == False):
@@ -236,7 +236,7 @@ while cont:
                     print('NO ES UN TIRO VALIDO')
 
             while not nextTurn:
-                if not play:
+                if play:
                     break
 
                 print('*********COMPUTER TURN*********')
@@ -264,7 +264,7 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
-                if not play:
+                if play:
                     break
 
                 if (checkPossibleMoves(1, actualboard) == False):
@@ -283,7 +283,7 @@ while cont:
                     print('NO ES UN TIRO VALIDO')
 
             while not nextTurn:
-                if not play:
+                if play:
                     break
                 
                 print('*********COMPUTER TURN*********')
