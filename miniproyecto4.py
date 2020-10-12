@@ -169,7 +169,7 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
-                if (checkPossibleMoves(nextTurn, actualboard) == False):
+                if (checkPossibleMoves(1, actualboard) == False):
                     nextTurn = False
                 else:
                     pass
@@ -210,7 +210,7 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
-                if (checkPossibleMoves(nextTurn, actualboard) == False):
+                if (checkPossibleMoves(1, actualboard) == False):
                     nextTurn = False
                 else:
                     pass
@@ -250,7 +250,7 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
-                if (checkPossibleMoves(nextTurn, actualboard) == False):
+                if (checkPossibleMoves(1, actualboard) == False):
                     nextTurn = False
                 else:
                     pass
