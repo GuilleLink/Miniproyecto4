@@ -169,6 +169,9 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
+                if not play:
+                    break
+
                 if (checkPossibleMoves(1, actualboard) == False):
                     nextTurn = False
                 else:
@@ -185,6 +188,9 @@ while cont:
                     print('NO ES UN TIRO VALIDO')
 
             while not nextTurn:
+                if not play:
+                    break
+
                 print('*********COMPUTER TURN*********')
                 move = start_simulation(it, actualboard) + 1
                 move = str(move)
@@ -194,6 +200,7 @@ while cont:
                     printBoard(actualboard)
                 else:
                     print('NO ES UN TIRO VALIDO')
+
         if winner == 1:
             print('GANASTEEE :)')
         elif winner == 0:
@@ -210,6 +217,9 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
+                if not play:
+                    break
+
                 if (checkPossibleMoves(1, actualboard) == False):
                     nextTurn = False
                 else:
@@ -226,6 +236,9 @@ while cont:
                     print('NO ES UN TIRO VALIDO')
 
             while not nextTurn:
+                if not play:
+                    break
+
                 print('*********COMPUTER TURN*********')
                 move = start_simulation(it, actualboard) + 1
                 move = str(move)
@@ -235,6 +248,7 @@ while cont:
                     printBoard(actualboard)
                 else:
                     print('NO ES UN TIRO VALIDO')
+
         if winner == 1:
             print('GANASTEEE :)')
         elif winner == 0:
@@ -250,6 +264,9 @@ while cont:
         actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
+                if not play:
+                    break
+
                 if (checkPossibleMoves(1, actualboard) == False):
                     nextTurn = False
                 else:
@@ -266,6 +283,9 @@ while cont:
                     print('NO ES UN TIRO VALIDO')
 
             while not nextTurn:
+                if not play:
+                    break
+                
                 print('*********COMPUTER TURN*********')
                 move = start_simulation(it, actualboard) + 1
                 move = str(move)
@@ -275,6 +295,7 @@ while cont:
                     printBoard(actualboard)
                 else:
                     print('NO ES UN TIRO VALIDO')
+
         if winner == 1:
             print('GANASTEEE :)')
         elif winner == 0:
