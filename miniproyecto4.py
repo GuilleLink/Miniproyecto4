@@ -166,9 +166,13 @@ while cont:
         it = 0
         play = False
         printBoard(startBoard)
-        actualboard = startBoard
+        actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
+                if (checkPossibleMoves(nextTurn, actualboard) == False):
+                    nextTurn = False
+                else:
+                    pass
                 print('*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-5): ')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
@@ -203,9 +207,13 @@ while cont:
         it = 500
         play = False
         printBoard(startBoard)
-        actualboard = startBoard
+        actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
+                if (checkPossibleMoves(nextTurn, actualboard) == False):
+                    nextTurn = False
+                else:
+                    pass
                 print('*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-5): ')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
@@ -239,11 +247,15 @@ while cont:
         it = 10000
         play = False
         printBoard(startBoard)
-        actualboard = startBoard
+        actualboard = np.copy(startBoard)
         while not play:
             while nextTurn:
+                if (checkPossibleMoves(nextTurn, actualboard) == False):
+                    nextTurn = False
+                else:
+                    pass
                 print('*********HUMAN TURN*********')
-                move = input('Ingrese su movimiento (1-5): ')
+                move = input('Ingrese su movimiento (1-5): ')                
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
                     if(actualboard.item((1, int(move)-1)) != 0):
                         actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
