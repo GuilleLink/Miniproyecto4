@@ -97,6 +97,14 @@ def checkPossibleMoves(turn, board):
     else:
         return True
 
+def getPossibleMoves(turn, board):
+    possible = []
+    for i in range(len(board[turn]) - 1):
+        if board.item((turn, i)) != 0:
+            possible.append(i)
+
+    return possible
+
 def start_simulation(iteraciones, board):
     variables = {
         0: {
@@ -124,34 +132,32 @@ def start_simulation(iteraciones, board):
     for i in range(iteraciones):
         board_temp = np.copy(board)
         turno = False
-        correct = False
 
-        if checkPossibleMoves(0, board_temp):
-            while not correct:
-                eleccion_inicial = random.randint(0, 4)
-                if board_temp.item((0, eleccion_inicial)) != 0:
-                    correct = True
-        else:
-            eleccion_inicial = random.randint(0, 4)
-        
+        possible_moves = getPossibleMoves(0, board_temp)
+        eleccion_inicial = 0
+        if possible_moves:
+            eleccion_inicial = random.choice(possible_moves)
+
         variables[eleccion_inicial]['elegidos'] += 1
         board_temp, turno, end, win = doMove(eleccion_inicial, board_temp, turno)
 
         while not end:
-            correct = False
-
-            if checkPossibleMoves(0, board_temp):
-                while not correct:
-                    eleccion = random.randint(0, 4)
-                    if board_temp.item((0, eleccion)) != 0:
-                        correct = True
+            if turno:
+                turno_num = 1
             else:
-                eleccion = random.randint(0, 4)
+                turno_num = 0
+            
+            possible_moves = getPossibleMoves(turno_num, board_temp)
+            eleccion = 0
+            if possible_moves:
+                eleccion = random.choice(possible_moves)
 
             board_temp, turno, end, win = doMove(eleccion, board_temp, turno)
 
         if win == 0:
             variables[eleccion_inicial]['exitos'] += 1
+        # elif win == 1:
+        #     variables[eleccion_inicial]['exitos'] += -1
 
     return calcular_movimiento(variables)
 
