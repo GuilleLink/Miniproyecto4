@@ -81,7 +81,7 @@ def doMove(move, board, currentTurn):
     return newBoard, nextTurn, checkEnd(newBoard), WhoWin(newBoard)
 
 def checkEnd(board):
-    if board.item((0, 6)) + board.item((1, 6)) == 50:
+    if board.item((0, 6)) + board.item((1, 6)) == 48:
         return True
     else:
         return False
