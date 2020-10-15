@@ -10,21 +10,21 @@ import random
 
 #Variables
 cont = True
-startBoard = np.matrix([[4,4,4,4,4,0],[4,4,4,4,4,0]])
+startBoard = np.matrix([[4,4,4,4,4,4,0],[4,4,4,4,4,4,0]])
 #Code
 
 
 #printBoard
 #----------------------------------------
-#MATRIX 2x6
-# [[4,4,4,4,4,0],    PC
-#  [4,4,4,4,4,0]]    User
+#MATRIX 2x7
+# [[4,4,4,4,4,4,0],    PC
+#  [4,4,4,4,4,4,0]]    User
 #----------------------------------------
 def printBoard(board):
-    print('   ' + str(board.item((0,4))) + '  ' + str(board.item((0,3))) + '  ' + str(board.item((0,2))) + '  ' + str(board.item((0,1))) + '  ' + str(board.item((0,0))))
-    print(str(board.item((0,5))) + '                 ' + str(board.item((1,5))))
-    print('   ' + str(board.item((1,0))) + '  ' + str(board.item((1,1))) + '  ' + str(board.item((1,2))) + '  ' + str(board.item((1,3))) + '  ' + str(board.item((1,4))))
-    print('   1  2  3  4  5  \n')
+    print('   ' + str(board.item((0,5))) + '  ' + str(board.item((0,4))) + '  ' + str(board.item((0,3))) + '  ' + str(board.item((0,2))) + '  ' + str(board.item((0,1))) + '  ' + str(board.item((0,0))))
+    print(str(board.item((0,6))) + '                    ' + str(board.item((1,6))))
+    print('   ' + str(board.item((1,0))) + '  ' + str(board.item((1,1))) + '  ' + str(board.item((1,2))) + '  ' + str(board.item((1,3))) + '  ' + str(board.item((1,4))) + '  ' + str(board.item((1,5))))
+    print('   1  2  3  4  5  6  \n')
 
 
 def doMove(move, board, currentTurn):
@@ -34,43 +34,62 @@ def doMove(move, board, currentTurn):
     if currentTurn:
         nextTurn = False
         turn = 1
+        actualturn = 1
 
     if not currentTurn:
         nextTurn = True
         turn = 0
+        actualturn = 0
 
     moves =  newBoard.item((turn,move))
     newBoard.itemset((turn,move), 0)
     
     for movement in range(1, moves+1):
-        if((movement + move) % 6 == 5):
-            newBoard.itemset((turn, 5) , newBoard.item((turn, 5))+1)
+        if((movement + move) % 7 == 6):
+            newBoard.itemset((turn, 6) , newBoard.item((turn, 6))+1)
             if (turn == 1):
                 turn = 0
             else:
                 turn = 1
 
         else:
-            newBoard.itemset((turn,((move+movement) % 6)), newBoard.item((turn, ((move+movement) % 6))) + 1)
+            newBoard.itemset((turn,((move+movement) % 7)), newBoard.item((turn, ((move+movement) % 7))) + 1)
     
-    if(move+moves==5 and currentTurn):
+        #Condicion de robo
+        if (movement == moves and turn == actualturn and newBoard.item((actualturn, ((move+movement) % 6))) == 1):
+            #La casilla se queda 0 y se suma al banco de puntos
+            newBoard.itemset((actualturn,((move+movement) % 6)), 0)
+            #Le robo al opuesto
+            if (actualturn == 0):
+                stealingTurn = 1
+            elif (actualturn == 1):
+                stealingTurn = 0
+            #Se le roba al otro
+            stealPoints = newBoard.item((stealingTurn, 6-(((move+movement)%7)+1)))
+            newBoard.itemset((stealingTurn, 6-(((move+movement)%7)+1)), 0)
+            #Suma de puntos
+            newBoard.itemset((actualturn, 6) , newBoard.item((actualturn, 6))+1+stealPoints)
+        else:
+            pass
+
+    if(move+moves==6 and currentTurn):
         nextTurn = True
 
-    elif(move+moves==5 and not currentTurn):
+    elif(move+moves==6 and not currentTurn):
         nextTurn = False
 
     return newBoard, nextTurn, checkEnd(newBoard), WhoWin(newBoard)
 
 def checkEnd(board):
-    if board.item((0, 5)) + board.item((1, 5)) == 40:
+    if board.item((0, 6)) + board.item((1, 6)) == 50:
         return True
     else:
         return False
 
 def WhoWin(board):
-    if board.item((0, 5)) > board.item((1, 5)):
+    if board.item((0, 6)) > board.item((1, 6)):
         return 0
-    elif board.item((0, 5)) < board.item((1, 5)):
+    elif board.item((0, 6)) < board.item((1, 6)):
         return 1
     else:
         return -1
@@ -92,7 +111,7 @@ def calcular_movimiento(variables):
     return random.choice(max_keys)
 
 def checkPossibleMoves(turn, board):
-    if (sum(board[turn]) - (board.item((turn, 5))) == 0):
+    if (sum(board[turn]) - (board.item((turn, 6))) == 0):
         return False
     else:
         return True
@@ -124,6 +143,10 @@ def start_simulation(iteraciones, board):
             'elegidos': 0
         },
         4: {
+            'exitos': 0,
+            'elegidos': 0
+        },
+        5: {
             'exitos': 0,
             'elegidos': 0
         }
@@ -183,8 +206,8 @@ while cont:
                 else:
                     pass
                 print('*********HUMAN TURN*********')
-                move = input('Ingrese su movimiento (1-5): ')
-                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                move = input('Ingrese su movimiento (1-6): ')
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     if(actualboard.item((1, int(move)-1)) != 0):
                         actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
                         printBoard(actualboard)
@@ -201,7 +224,7 @@ while cont:
                 move = start_simulation(it, actualboard) + 1
                 move = str(move)
                 print('Movimiento de PC:', move)
-                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)
                     printBoard(actualboard)
                 else:
@@ -231,8 +254,8 @@ while cont:
                 else:
                     pass
                 print('*********HUMAN TURN*********')
-                move = input('Ingrese su movimiento (1-5): ')
-                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                move = input('Ingrese su movimiento (1-6): ')
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     if(actualboard.item((1, int(move)-1)) != 0):
                         actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
                         printBoard(actualboard)
@@ -249,7 +272,7 @@ while cont:
                 move = start_simulation(it, actualboard) + 1
                 move = str(move)
                 print('Movimiento de PC:', move)
-                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)
                     printBoard(actualboard)
                 else:
@@ -278,8 +301,8 @@ while cont:
                 else:
                     pass
                 print('*********HUMAN TURN*********')
-                move = input('Ingrese su movimiento (1-5): ')                
-                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                move = input('Ingrese su movimiento (1-6): ')                
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     if(actualboard.item((1, int(move)-1)) != 0):
                         actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)   
                         printBoard(actualboard)
@@ -296,7 +319,7 @@ while cont:
                 move = start_simulation(it, actualboard) + 1
                 move = str(move)
                 print('Movimiento de PC:', move)
-                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5'):
+                if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     actualboard, nextTurn, play, winner = doMove(int(move)-1, actualboard, nextTurn)
                     printBoard(actualboard)
                 else:
