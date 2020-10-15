@@ -56,9 +56,9 @@ def doMove(move, board, currentTurn):
             newBoard.itemset((turn,((move+movement) % 7)), newBoard.item((turn, ((move+movement) % 7))) + 1)
     
         #Condicion de robo
-        if (movement == moves and turn == actualturn and newBoard.item((actualturn, ((move+movement) % 6))) == 1):
+        if (movement == moves and turn == actualturn and newBoard.item((actualturn, ((move+movement) % 7))) == 1 and newBoard.item((actualturn, ((move+movement) % 7))) != newBoard.item((actualturn, 6))):
             #La casilla se queda 0 y se suma al banco de puntos
-            newBoard.itemset((actualturn,((move+movement) % 6)), 0)
+            newBoard.itemset((actualturn,((move+movement) % 7)), 0)
             #Le robo al opuesto
             if (actualturn == 0):
                 stealingTurn = 1
