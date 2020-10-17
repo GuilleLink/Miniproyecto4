@@ -13,6 +13,9 @@ cont = True
 startBoard = np.matrix([[4,4,4,4,4,4,0],[4,4,4,4,4,4,0]])
 #Code
 
+class bcolors:
+    OKGREEN = '\033[92m'
+    ENDC = '\033[0m'
 
 #printBoard
 #----------------------------------------
@@ -24,7 +27,7 @@ def printBoard(board):
     print('   ' + str(board.item((0,5))) + '  ' + str(board.item((0,4))) + '  ' + str(board.item((0,3))) + '  ' + str(board.item((0,2))) + '  ' + str(board.item((0,1))) + '  ' + str(board.item((0,0))))
     print(str(board.item((0,6))) + '                    ' + str(board.item((1,6))))
     print('   ' + str(board.item((1,0))) + '  ' + str(board.item((1,1))) + '  ' + str(board.item((1,2))) + '  ' + str(board.item((1,3))) + '  ' + str(board.item((1,4))) + '  ' + str(board.item((1,5))))
-    print('   1  2  3  4  5  6  \n')
+    print('   1  2  3  4  5  6  \n' + bcolors.ENDC)
 
 
 def doMove(move, board, currentTurn):
@@ -74,11 +77,30 @@ def doMove(move, board, currentTurn):
         else:
             pass
 
+
+
     if(move+moves==6 and currentTurn):
         nextTurn = True
 
     elif(move+moves==6 and not currentTurn):
         nextTurn = False
+
+    if currentTurn:
+        if sum(newBoard[1][:6]) == 0:
+            sumar_total = 0
+            for i in range(len(newBoard[0]) - 1):
+                sumar_total += newBoard.item((0, i))
+                newBoard.itemset((0, i), 0)
+            newBoard.itemset((1, 6), newBoard.item((1, 6)) + sumar_total)
+            # print('TU TERMINASTE, ROBASTE:', sumar_total)
+    else:
+        if sum(newBoard[0][:6]) == 0:
+            sumar_total = 0
+            for i in range(len(newBoard[1]) - 1):
+                sumar_total += newBoard.item((1, i))
+                newBoard.itemset((1, i), 0)
+            newBoard.itemset((0, 6), newBoard.item((0, 6)) + sumar_total)
+            # print('CPU TERMINO, ROBO:', sumar_total)
 
     return newBoard, nextTurn, checkEnd(newBoard), WhoWin(newBoard)
 
@@ -181,8 +203,6 @@ def start_simulation(iteraciones, board):
 
         if win == 0:
             variables[eleccion_inicial]['exitos'] += 1
-        # elif win == 1:
-        #     variables[eleccion_inicial]['exitos'] += -1
 
     return calcular_movimiento(variables)
 
@@ -208,7 +228,8 @@ while cont:
                     break
                 else:
                     pass
-                print('*********HUMAN TURN*********')
+
+                print(bcolors.OKGREEN + '*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-6): ')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     if(actualboard.item((1, int(move)-1)) != 0):
@@ -257,7 +278,8 @@ while cont:
                     break
                 else:
                     pass
-                print('*********HUMAN TURN*********')
+
+                print(bcolors.OKGREEN + '*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-6): ')
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     if(actualboard.item((1, int(move)-1)) != 0):
@@ -305,7 +327,8 @@ while cont:
                     break
                 else:
                     pass
-                print('*********HUMAN TURN*********')
+
+                print(bcolors.OKGREEN + '*********HUMAN TURN*********')
                 move = input('Ingrese su movimiento (1-6): ')                
                 if(move == '1' or move == '2' or move == '3' or move == '4' or move == '5' or move == '6'):
                     if(actualboard.item((1, int(move)-1)) != 0):
